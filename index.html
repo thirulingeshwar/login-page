@@ -1,318 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ΔHMI</title>
-    <style>
-        :root {
-            --bg-color: #000;
-            --text-color: #fff;
-            --accent-color: #2997ff;
-            --glow-color: rgba(41, 151, 255, 0.4);
-            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            perspective: 1000px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ΔHMI</title>
+  <style>
+    :root {
+      --bg-color: #000;
+      --text-color: #fff;
+      --accent-color: #2997ff;
+      --glow-color: rgba(41, 151, 255, 0.4);
+      --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-        .loading-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: var(--transition);
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        .logo-wrapper {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      overflow: hidden;
+    }
 
-        .logo {
-            font-size: 100px;
-            font-weight: 800;
-            color: transparent;
-            background: linear-gradient(135deg, #fff 30%, var(--accent-color) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            position: relative;
-            z-index: 2;
-            transform: translateZ(0);
-            animation: float 4s ease-in-out infinite;
-        }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+    }
 
-        .logo-glow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, var(--glow-color) 0%, transparent 70%);
-            filter: blur(20px);
-            z-index: 1;
-            opacity: 0.7;
-            animation: pulse-glow 3s ease-in-out infinite alternate;
-        }
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      transition: var(--transition);
+    }
 
-        .logo-ring {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: rotate 20s linear infinite;
-        }
+    .logo-wrapper {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
 
-        .logo-ring::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
-            transform: translateX(-50%);
-        }
+    .logo {
+      font-size: 100px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      z-index: 2;
+      animation: float 4s ease-in-out infinite;
+    }
 
-        .progress-container {
-            width: 300px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 1px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
+    .logo-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--glow-color) 0%, transparent 70%);
+      filter: blur(20px);
+      z-index: 1;
+      animation: pulse-glow 3s ease-in-out infinite alternate;
+    }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent-color), #6bd1ff);
-            border-radius: 1px;
-            transition: width 0.4s cubic-bezier(0.28, 0.44, 0.49, 1);
-            position: relative;
-        }
+    .logo-ring {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: rotate 20s linear infinite;
+    }
 
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: progress-shine 2s infinite;
-        }
+    .logo-ring::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+      transform: translateX(-50%);
+    }
 
-        .loading-text {
-            margin-top: 30px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            opacity: 0;
-            animation: text-appear 1s 0.5s forwards;
-        }
+    .progress-container {
+      width: 300px;
+      height: 2px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 1px;
+      overflow: hidden;
+    }
 
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            overflow: hidden;
-        }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-color), #6bd1ff);
+      transition: width 0.4s cubic-bezier(0.28, 0.44, 0.49, 1);
+      position: relative;
+    }
 
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float-particle 15s infinite linear;
-        }
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: progress-shine 2s infinite;
+    }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.03); }
-        }
+    .loading-text {
+      margin-top: 30px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: text-appear 1s 0.5s forwards;
+    }
 
-        @keyframes pulse-glow {
-            0% { transform: scale(0.9); opacity: 0.5; }
-            100% { transform: scale(1.1); opacity: 0.8; }
-        }
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float-particle 15s infinite linear;
+    }
 
-        @keyframes progress-shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
+    .form-container {
+      width: 100%;
+      height: 100vh;
+      opacity: 0;
+      transition: var(--transition);
+      transform: translateY(20px);
+    }
 
-        @keyframes text-appear {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
 
-        @keyframes float-particle {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-1000px) translateX(200px); opacity: 0; }
-        }
+    .hidden {
+      display: none;
+    }
 
-        .form-container {
-            width: 100%;
-            height: 100vh;
-            opacity: 0;
-            transition: var(--transition);
-            transform: translateY(20px);
-        }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-15px) scale(1.03); }
+    }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
+    @keyframes pulse-glow {
+      0% { transform: scale(0.9); opacity: 0.5; }
+      100% { transform: scale(1.1); opacity: 0.8; }
+    }
 
-        .hidden {
-            display: none;
-        }
-    </style>
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes progress-shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes text-appear {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float-particle {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-1000px) translateX(200px); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
-    <div class="loading-container" id="loadingContainer">
-        <div class="particles" id="particles"></div>
-        
-        <div class="logo-wrapper">
-            <div class="logo-glow"></div>
-            <div class="logo-ring"></div>
-            <div class="logo">HMI</div>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        
-        <div class="loading-text" id="loadingText">Initializing Interface</div>
+  <div class="loading-container" id="loadingContainer">
+    <div class="particles" id="particles"></div>
+
+    <div class="logo-wrapper">
+      <div class="logo-glow"></div>
+      <div class="logo-ring"></div>
+      <div class="logo">HMI</div>
     </div>
 
-    <div class="form-container" id="formContainer">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd8OUzWGExWUjYsbk7wi1fig5_f4XUWU7n1CBY3s4axd9lOqg/viewform?usp=header" 
-                frameborder="0" marginheight="0" marginwidth="0" id="formIframe">Loading...</iframe>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create particles
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random properties
-                const size = Math.random() * 3 + 1;
-                const posX = Math.random() * 100;
-                const delay = Math.random() * 15;
-                const duration = 10 + Math.random() * 20;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.bottom = `-10px`;
-                particle.style.animationDelay = `${delay}s`;
-                particle.style.animationDuration = `${duration}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-            
-            // Loading animation
-            const loadingContainer = document.getElementById('loadingContainer');
-            const formContainer = document.getElementById('formContainer');
-            const progressBar = document.getElementById('progressBar');
-            const loadingText = document.getElementById('loadingText');
-            const formIframe = document.getElementById('formIframe');
-            
-            let progress = 0;
-            const messages = [
-                { progress: 0, text: "Booting System..." },
-                { progress: 15, text: "Loading Modules..." },
-                { progress: 30, text: "Establishing Connection..." },
-                { progress: 50, text: "Optimizing Performance..." },
-                { progress: 75, text: "Finalizing Setup..." },
-                { progress: 90, text: "Ready for Interaction" }
-            ];
-            
-            const interval = setInterval(function() {
-                // Smooth random progress
-                const increment = 0.5 + Math.random() * 3;
-                progress = Math.min(progress + increment, 100);
-                progressBar.style.width = progress + '%';
-                
-                // Update loading text at specific intervals
-                const currentMessage = messages.reduce((last, msg) => 
-                    progress >= msg.progress ? msg : last
-                , messages[0]);
-                
-                if (loadingText.textContent !== currentMessage.text) {
-                    loadingText.style.opacity = 0;
-                    setTimeout(() => {
-                        loadingText.textContent = currentMessage.text;
-                        loadingText.style.opacity = 1;
-                    }, 200);
-                }
-                
-                // Complete loading at 100%
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        // Animate out loading screen
-                        loadingContainer.style.opacity = '0';
-                        loadingContainer.style.transform = 'scale(0.9)';
-                        
-                        setTimeout(function() {
-                            loadingContainer.classList.add('hidden');
-                            
-                            // Animate in form
-                            formContainer.style.opacity = '1';
-                            formContainer.style.transform = 'translateY(0)';
-                            
-                            setTimeout(() => {
-                                formIframe.style.opacity = '1';
-                            }, 300);
-                        }, 500);
-                    }, 800);
-                }
-            }, 100);
-        });
-    </script>
+    <div class="loading-text" id="loadingText">Initializing Interface</div>
+  </div>
+
+  <div class="form-container" id="formContainer">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd8OUzWGExWUjYsbk7wi1fig5_f4XUWU7n1CBY3s4axd9lOqg/viewform?usp=header" 
+            title="Interstellar Form" id="formIframe">Loading...</iframe>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const particlesContainer = document.getElementById('particles');
+      const loadingContainer = document.getElementById('loadingContainer');
+      const formContainer = document.getElementById('formContainer');
+      const progressBar = document.getElementById('progressBar');
+      const loadingText = document.getElementById('loadingText');
+      const formIframe = document.getElementById('formIframe');
+
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 3 + 1;
+        const posX = Math.random() * 100;
+        const delay = Math.random() * 15;
+        const duration = 10 + Math.random() * 20;
+
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.bottom = `-10px`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        particlesContainer.appendChild(particle);
+      }
+
+      let progress = 0;
+      const messages = [
+        { progress: 0, text: "Booting System..." },
+        { progress: 15, text: "Loading Modules..." },
+        { progress: 30, text: "Establishing Connection..." },
+        { progress: 50, text: "Optimizing Performance..." },
+        { progress: 75, text: "Finalizing Setup..." },
+        { progress: 90, text: "Ready for Interaction" }
+      ];
+
+      const interval = setInterval(() => {
+        const increment = 0.5 + Math.random() * 3;
+        progress = Math.min(progress + increment, 100);
+        progressBar.style.width = `${progress}%`;
+
+        const currentMessage = messages.reduce((prev, msg) =>
+          progress >= msg.progress ? msg : prev
+        , messages[0]);
+
+        if (loadingText.textContent !== currentMessage.text) {
+          loadingText.style.opacity = 0;
+          setTimeout(() => {
+            loadingText.textContent = currentMessage.text;
+            loadingText.style.opacity = 1;
+          }, 200);
+        }
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            loadingContainer.style.opacity = '0';
+            loadingContainer.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+              loadingContainer.classList.add('hidden');
+              formContainer.style.opacity = '1';
+              formContainer.style.transform = 'translateY(0)';
+              setTimeout(() => {
+                formIframe.style.opacity = '1';
+              }, 300);
+            }, 500);
+          }, 800);
+        }
+      }, 100);
+    });
+  </script>
 </body>
 </html>
